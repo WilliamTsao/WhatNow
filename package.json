@@ -1,0 +1,30 @@
+{
+  "name": "wyt215-final-project",
+  "version": "1.0.0",
+  "description": "## Overview",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nyu-csci-ua-0480-008-spring-2017/wyt215-final-project.git"
+  },
+  "author": "William Tsao",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/nyu-csci-ua-0480-008-spring-2017/wyt215-final-project/issues"
+  },
+  "homepage": "https://github.com/nyu-csci-ua-0480-008-spring-2017/wyt215-final-project#readme",
+  "dependencies": {
+    "bluebird": "^3.5.0",
+    "body-parser": "^1.17.1",
+    "express": "^4.15.2",
+    "hbs": "^4.0.1",
+    "mongoose": "^4.9.2",
+    "mongoose-url-slugs": "^0.2.1"
+  },
+  "devDependencies": {
+    "eslint": "^3.18.0"
+  }
+}
