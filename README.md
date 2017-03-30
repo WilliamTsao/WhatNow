@@ -65,23 +65,23 @@ An Example Suggestion:
 
 / - page that renders most recent questions posted
 
-![home](documentation/home.png)
+![home](documentation/home.jpeg)
 
 /login - page for new user to signup and returning user to login
 
-![signupOrLogin](documentation/signupLogin.png)
+![signupOrLogin](documentation/signupLogin.jpeg)
 
 /search?s="keywords" - page for showing specific question
 
-![post](documentation/search.png)
+![post](documentation/search.jpeg)
 
 /:username - page for showing questions and suggestions posted by this user
 
-![username](documentation/user.png)
+![username](documentation/user.jpeg)
 
 ## Site map
 
-![username](documentation/sitemap.png)
+![username](documentation/sitemap.jpeg)
 
 ## User Stories or Use Cases
 
