@@ -2,7 +2,7 @@
 
 const express = require('express');
 const app = express();
-
+const port = process.env.PORT || 3000;
 // Use __dirname to construct absolute paths for:
 // 1. express-static
 const path = require('path');
@@ -193,4 +193,4 @@ app.get('/logout', (req,res)=>{
 
 
 
-app.listen(3000);
+app.listen(port);
