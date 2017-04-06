@@ -1,0 +1,218 @@
+<header>
+	<section>
+		<figure><img class='logo' src="/images/logo.svg"></figure>
+		<section class='user'>	
+			{{#if user}}
+				<div class='currentUser'>
+					<div><i class="fa fa-bell" aria-hidden="true"></i></div>
+					<img src='/images/{{user}}.jpg' />
+				</div>
+			{{else}}
+				<a href="/register">
+					<div>
+						Login / Signup
+					</div>
+				</a>
+			{{/if}}
+		</section>
+		<div class="clear"></div>
+	</section>
+
+	<form method="post">
+		<div class='select-wrapper'>
+			<select name='verb'>
+				<option>What To Do</option>
+				<option>What To Say</option>
+			</select>
+		</div>
+		<input type="text" name="text" placeholder="What's on your mind">
+		<div class='select-wrapper'>
+			<select name='category'>
+				<option value="relationship">Relationship</option>
+				<option value="travel">Travel</option>
+				<option value="food">Food</option>
+				<option value="sports">Sports</option>
+				<option value="technology">Technology</option>
+				<option value="career">Career</option>
+				<option value="other">Other</option>	
+			</select>
+		</div>
+	</form>
+
+	<nav>
+		<ul>
+			<a href="/"><li>News Feed</li></a>
+			<a href='/?category=relationship'><li>Relationship</li></a>
+			<a href='/?category=travel'><li>Travel</li></a>
+			<a href='/?category=food'><li>Food</li></a>
+			<a href='/?category=sports'><li>Sports</li></a>
+			<a href='/?category=technology'><li>Technology</li></a>
+			<a href ="/?category=career"><li>Career</li></a>
+			<li>More</li>
+		</ul>	
+	</nav>
+</header>
+
+<div class='wrapper'>
+	<div class='feed'>
+	<!-- 
+		<div class="post">	
+			<img src="/images/dickhead101.jpg">
+			<div class='poster'>
+				<h2>@dickhead101</h2>
+			</div>
+			<div class="clear"></div>
+			<p>
+				What to do around pebble beach area?
+			</p>
+			<div class='bottom'><i class="fa fa-comment" aria-hidden="true"></i>Suggestions</div>
+			<div class="timestamp">3:10 PM - 31 Jul 2016</div>
+			<section class='comments'>
+				<div class="comment_wrapper">
+					<img src="/images/dickhead101.jpg">
+					<a>@dickhead101</a>
+					<span class=comment>The Lone Cypress</span>
+
+					<div>
+						<span><i class="fa fa-heart" aria-hidden="true"></i>
+						5 Likes</span>
+						<span class="timestamp">3:10 PM - 31 Jul 2016</span>
+					</div>
+				</div>
+
+				<div class='comment_wrapper'>
+					<img src="/images/dickhead101.jpg">
+					<a>@dickhead101</a>
+					<span class=comment>The Lone Cypress</span>
+					
+					<div>
+						<span><i class="fa fa-heart" aria-hidden="true"></i>
+						5 Likes</span>
+						<span class="timestamp">3:10 PM - 31 Jul 2016</span>
+					</div>
+				</div>
+				<div class="comment_wrapper post_comment">
+					<img src="/images/dickhead101.jpg">
+					<form method="post">
+						<input type="text" name="comment">
+					</form>
+				</div>
+			</section>
+			
+		</div>
+	-->
+
+		{{#each question}}
+			<div class="post">
+				<img src=/images/{{this.user}}.jpg>
+				<div class='poster'>
+					<h2>@dickhead101</h2>
+				</div>
+				<div class="clear"></div>
+				<p>
+					{{this.text}}
+				</p>
+				<div class='bottom'><i class="fa fa-comment" aria-hidden="true"></i>Suggestions</div>
+				<div class="timestamp">{{this.createdAt}}</div>
+				<section class='comments'>
+					{{#each this.suggestions}}
+					<div class="comment_wrapper">
+						<img src="/images/dickhead101.jpg">
+						<a>@dickhead101</a>
+						<span class=comment>The Lone Cypress</span>
+
+						<div>
+							<span><i class="fa fa-heart" aria-hidden="true"></i>
+							5 Likes</span>
+							<span class="timestamp">3:10 PM - 31 Jul 2016</span>
+						</div>
+					</div>
+					{{/each}}
+					<div class="comment_wrapper post_comment">
+						<img src="/images/dickhead101.jpg">
+						<form method="post">
+							<input type="text" name="comment">
+						</form>
+					</div>
+				</section>
+			</div>
+		{{/each}}
+	</div>
+
+
+
+
+
+
+	<div class='right'>
+		<form action='/search'>
+			<input type="text" name="s" placeholder='&#xf002; Search Seam' style="font-family:Arial, FontAwesome" />
+		</form>
+		<section class='trending'>
+			<h2>Trending Posts</h2>
+			<a href="/question/this.slug">
+				<div class='post'>
+					<h3>@dickhead101</h3>
+					<p>
+						What to do around pebble beach area?
+					</p>
+					<div class='bottom'><i class="fa fa-comment" aria-hidden="true"></i>Suggestions</div>
+					<div class="timestamp">3:10 PM - 31 Jul 2016</div>
+					<div class="clear"></div>
+				</div>
+			</a>
+			
+
+
+			{{#each hotPost}}
+				<a href="/question/{{this.slug}}">
+					<div class='post'>
+						<h3>{{this.user.username}}</h3>
+						<p>
+							{{this.text}}
+						</p>
+						<div class='bottom'><i class="fa fa-comment" aria-hidden="true"></i>Suggestions</div>
+						<div class="timestamp">{{this.createdAt}}</div>
+						<div class="clear"></div>
+					</div>
+				</a>
+			{{/each}}
+		</section>
+
+		<section class='my_posts'>
+			<h2>Your Posts</h2>
+			<a href="/question/this.slug">
+				<div class='post'>
+					<h3>@dickhead101</h3>
+					<p>
+						What to do around pebble beach area?
+					</p>
+					<div class='bottom'><i class="fa fa-comment" aria-hidden="true"></i>Suggestions</div>
+					<div class="timestamp">3:10 PM - 31 Jul 2016</div>
+					<div class="clear"></div>
+				</div>
+			</a>
+			<a href="/question/this.slug">
+				<div class='post'>
+					<h3>@dickhead101</h3>
+					<p>
+						What to do around pebble beach area?
+					</p>
+					<div class='bottom'><i class="fa fa-comment" aria-hidden="true"></i>Suggestions</div>
+					<div class="timestamp">3:10 PM - 31 Jul 2016</div>
+					<div class="clear"></div>
+				</div>
+			</a>
+			{{#each hotPost}}
+				<a href="/question/{{this.slug}}">
+					<div>
+						<h3>{{this.username}}</h3>
+						<p>
+							{{this.text}}
+						</p>
+					</div>
+				</a>
+			{{/each}}
+		</section>
+	</div>
+</div>
