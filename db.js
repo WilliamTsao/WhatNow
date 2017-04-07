@@ -39,5 +39,5 @@ mongoose.model('User', User);
 mongoose.model('Question', Question);
 mongoose.model('Suggestion', Suggestion);
 
-mongoose.connect(process.env.MONGOLAB_URI;);
+mongoose.connect(process.env.MONGOLAB_URI);
 
