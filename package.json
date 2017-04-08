@@ -28,7 +28,8 @@
     "express-session": "^1.15.2",
     "hbs": "^4.0.1",
     "mongoose": "^4.9.2",
-    "mongoose-url-slugs": "^0.2.1"
+    "mongoose-url-slugs": "^0.2.1",
+    "parsleyjs": "^2.7.0"
   },
   "devDependencies": {
     "eslint": "^3.18.0"
