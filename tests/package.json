@@ -1,0 +1,15 @@
+{
+  "name": "codeceptjs_testing",
+  "version": "1.0.0",
+  "description": "Basic Tests for Photoshelter",
+  "author": "William Tsao",
+  "license": "MIT",
+  "scripts":{
+  	"test": "codeceptjs run . --steps"
+  },
+  "devDependencies": {
+    "codeceptjs": "^0.5.1",
+    "nightmare": "^2.10.0",
+    "nightmare-upload": "^0.1.1"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "tests": "tests/**/*_test.js",
+  "timeout": 10000,
+  "output": "./output",
+  "helpers": {
+    "Nightmare": {
+      "url": "https://www.photoshelter.com/",
+      "show": true
+    }
+  },
+  "include": {
+    "TopNavItems": "./pages/TopNavItems.js",
+    "signupPage": "./pages/Signup.js",
+    "signinPage": "./pages/signin.js",
+    "newGalleryPage": "./pages/newGallery.js"
+  },
+  "bootstrap": false,
+  "mocha": {},
+  "name": "codeceptjs_testing"
+}

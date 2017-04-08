@@ -1,0 +1,1 @@
+codeceptJs-nightmare-tests-photoshelter
