@@ -15,7 +15,10 @@ const User = new mongoose.Schema({
 const Question = new mongoose.Schema({
 	text: String,
 	category: String,
-	user: String,
+	user: {
+		name: String,
+		pic: String
+	},
 	suggestions: [mongoose.Schema.Types.ObjectId],
 	createdAt: Date
 });

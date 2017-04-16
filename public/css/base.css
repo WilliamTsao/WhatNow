@@ -55,6 +55,7 @@ header .user .currentUser img{
 	width: 50px;
 	border:1px white solid;
 	border-radius: 50%;
+	background-color: white;
 }
 /*xxxxxxx*/
 header form{
@@ -195,7 +196,7 @@ header nav ul li:hover{
 }
 .feed .post h2{
 	font-size: 20px;
-	color: #628ab5;
+	color: #2196f3;
 }
 .feed .post p{
 	margin-top: 23px;
@@ -258,7 +259,7 @@ header nav ul li:hover{
 	border-top: 1px solid rgba(151,151,151,0.13);
 	padding-top: 14px;
 }
-.post_comment form input{
+.post_comment div input{
 	width: 593px;
 	height: 10px;
 	border-radius: 2px;

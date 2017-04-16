@@ -1,14 +1,18 @@
+<link rel="stylesheet" type="text/css" href="/css/reg.css">
+
 <p>{{err}}</p>
+<div class='container'>
 <form action="/register" method="post">
 <legend>Register</legend>
-<input type="text" name="username">
-<input type="password" name="password">
-<input type="submit" name="Register">
+<input type="text" name="username" placeholder="Create your username">
+<input type="password" name="password" placeholder="Passowrd (at least 8 characters)">
+<input type="submit" value="Register">
 </form>
 
 <form action="/login" method="post">
 <legend>Login</legend>
-<input type="text" name="username">
-<input type="password" name="password">
-<input type="submit" name="Login">
+<input type="text" name="username" placeholder="Enter your username">
+<input type="password" name="password" placeholder="Enter your password">
+<input type="submit" value="Login">
 </form>
+</div>

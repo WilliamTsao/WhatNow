@@ -36,24 +36,35 @@ const Suggestion = mongoose.model('Suggestion');
 
 
 app.get('/', (req,res)=>{
-	Question.find((err, result)=>{
-		if(!err){
-			result = result.reverse('createdAt');
-			result.forEach((ele)=>{
-				Suggestion.find({_id:ele._id}, (err, sugs)=>{
-					ele.suggestions = sugs.reverse('createdAt');
+	if(req.query.category){
+		getByCategory(req, res);
+	}
+	else{
+		Question.find((err, result)=>{
+			if(!err){
+				result = result.reverse('createdAt');
+				result.forEach((ele)=>{
+					Suggestion.find({_id:ele._id}, (err, sugs)=>{
+						ele.suggestions = sugs.reverse('createdAt');
+					});
+					User.findOne({username: ele.user.name}, (err, poster)=>{
+						ele.user.pic = poster.pic;
+					});
 				});
-			});
-			if(req.session.hasOwnProperty('username')){
-				res.render('index', {user: req.session.username, question: result});
+				if(req.session.hasOwnProperty('username')){
+					User.findOne({username: req.session.username}, (err, u) => {
+						if(!err) res.render('index', {user: u, question: result});
+						else console.log(err);
+					});
+				}else{
+					res.render('index',  {question: result});	
+				}
 			}else{
-				res.render('index',  {question: result});	
+				console.log(err);
+				res.send(err);
 			}
-		}else{
-			console.log(err);
-			res.send(err);
-		}
-	});
+		});
+	}		
 });
 
 app.post('/', (req,res)=>{
@@ -61,7 +72,7 @@ app.post('/', (req,res)=>{
 		new Question({
 			text: req.body.verb + " " + req.body.text,
 			category: req.body.category,
-			user: req.session.username,
+			user: {name: req.session.username, pic: ""},
 			suggestions: [],
 			createdAt: new Date()
 		}).save();
@@ -72,11 +83,33 @@ app.post('/', (req,res)=>{
 });
 
 
-/*
+
 app.get('/search', (req,res)=>{
-	//query string s = "searched word"
+	Question.find({ "text": { "$regex": `./${req.query.s}/i`} }, (err, result)=>{
+		if(!err){
+			result = result.reverse('createdAt');
+			result.forEach((ele)=>{
+				Suggestion.find({_id:ele._id}, (err, sugs)=>{
+					ele.suggestions = sugs.reverse('createdAt');
+				});
+				User.findOne({username: ele.user.name}, (err, poster)=>{
+					ele.user.pic = poster.pic;
+				});
+			});
+			if(req.session.hasOwnProperty('username')){
+				User.findOne({username: req.session.username}, (err, u) => {
+					if(!err) res.render('index', {user: u, question: result});
+					else console.log(err);
+				});
+			}else{
+				res.render('index',  {question: result});	
+			}
+		}else{
+			console.log(err);
+			res.send(err);
+		}
+	});
 });
-*/
 
 
 //Auth stuff
@@ -113,7 +146,7 @@ app.post('/register', (req,res)=>{
 							username: req.body.username,
 							password: hash,
 							point: 0,
-							pic: req.body.username,
+							pic: "default_avatar.png",
 							questions: [],
 							suggestions: []
 						}).save().then((user)=>{
@@ -189,8 +222,52 @@ app.get('/logout', (req,res)=>{
 	});
 });
 
+app.post('/comment', (req,res)=>{
+	console.log(req.body.text);
+	console.log(req.body.q);
 
+	/*
+	if(req.session.hasOwnProperty('username')){
+		new Suggestion({
+			text: req.body.text,
+			user: {name: req.session.username, pic: ""},		
+			likes: 0,
+			likers: [],
+			question: req.body.q,
+			createdAt: new Date()
+		}).save();
+		res.redirect('/');
+	}else{
+		res.redirect('/register');
+	}
+	*/
+});
 
-
+function getByCategory(req, res){
+	Question.find({category: req.query.category}, (err, result)=>{
+		if(!err){
+			result = result.reverse('createdAt');
+			result.forEach((ele)=>{
+				Suggestion.find({_id:ele._id}, (err, sugs)=>{
+					ele.suggestions = sugs.reverse('createdAt');
+				});
+				User.findOne({username: ele.user.name}, (err, poster)=>{
+					ele.user.pic = poster.pic;
+				});
+			});
+			if(req.session.hasOwnProperty('username')){
+				User.findOne({username: req.session.username}, (err, u) => {
+					if(!err) res.render('index', {user: u, question: result});
+					else console.log(err);
+				});
+			}else{
+				res.render('index',  {question: result});	
+			}
+		}else{
+			console.log(err);
+			res.send(err);
+		}
+	});
+}
 
 app.listen(port);
