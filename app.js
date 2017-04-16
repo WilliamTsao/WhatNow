@@ -43,6 +43,8 @@ app.get('/', (req,res)=>{
 		Question.find((err, result)=>{
 			if(!err){
 				result = result.reverse('createdAt');
+				
+				//set this as promise
 				result.forEach((ele)=>{
 					Suggestion.find({_id:ele._id}, (err, sugs)=>{
 						ele.suggestions = sugs.reverse('createdAt');
@@ -50,7 +52,9 @@ app.get('/', (req,res)=>{
 					User.findOne({username: ele.user.name}, (err, poster)=>{
 						ele.user.pic = poster.pic;
 					});
-				});
+				})
+
+
 				if(req.session.hasOwnProperty('username')){
 					User.findOne({username: req.session.username}, (err, u) => {
 						if(!err) res.render('index', {user: u, question: result});
@@ -59,11 +63,24 @@ app.get('/', (req,res)=>{
 				}else{
 					res.render('index',  {question: result});	
 				}
+
+	
+
 			}else{
 				console.log(err);
 				res.send(err);
 			}
 		});
+		/*.then((result)=>{
+			if(req.session.hasOwnProperty('username')){
+				User.findOne({username: req.session.username}, (err, u) => {
+					if(!err) res.render('index', {user: u, question: result});
+					else console.log(err);
+				});
+			}else{
+				res.render('index',  {question: result});	
+			}
+		});*/
 	}		
 });
 
@@ -85,7 +102,7 @@ app.post('/', (req,res)=>{
 
 
 app.get('/search', (req,res)=>{
-	Question.find({ "text": { "$regex": `./${req.query.s}/i`} }, (err, result)=>{
+	Question.find({ "text": { "$regex": ".*" + req.query.s + ".*", "$options": 'i'} }, (err, result)=>{
 		if(!err){
 			result = result.reverse('createdAt');
 			result.forEach((ele)=>{
