@@ -249,11 +249,17 @@ header nav ul li:hover{
 	margin-right: 22px;
 	color: #787878;
 }
+.comments .comment_wrapper span.number{
+	margin-right: 0;
+}
 .comments .fa{
 	margin-right: 10px;
 }
 .comments .fa:hover{
 	color: #ed4956;
+}
+.comments .comment_wrapper .timestamp{
+	font-size: 14px;
 }
 .post_comment{
 	border-top: 1px solid rgba(151,151,151,0.13);

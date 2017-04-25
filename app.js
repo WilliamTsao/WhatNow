@@ -2,6 +2,8 @@
 
 const express = require('express');
 const app = express();
+
+
 const port = process.env.PORT || 3000;
 // Use __dirname to construct absolute paths for:
 // 1. express-static
@@ -12,6 +14,9 @@ app.use(express.static(path.join(__dirname, 'public')));
 // hbs setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'hbs');
+const hbs = require('hbs');
+const HandlebarsIntl = require('handlebars-intl');
+HandlebarsIntl.registerWith(hbs);
 
 //body-parser
 const bodyParser = require('body-parser');
@@ -35,52 +40,60 @@ const Question = mongoose.model('Question');
 const Suggestion = mongoose.model('Suggestion');
 
 
+
+
 app.get('/', (req,res)=>{
-	if(req.query.category){
-		getByCategory(req, res);
+	// Require Login/Signup
+	if(!req.session.hasOwnProperty('username')){
+		res.redirect('/register');
 	}
 	else{
-		Question.find((err, result)=>{
-			if(!err){
-				result = result.reverse('createdAt');
-				
-				//set this as promise
-				result.forEach((ele)=>{
-					Suggestion.find({_id:ele._id}, (err, sugs)=>{
-						ele.suggestions = sugs.reverse('createdAt');
-					});
-					User.findOne({username: ele.user.name}, (err, poster)=>{
-						ele.user.pic = poster.pic;
-					});
-				})
+		// If category is selected, display only that category
+		if(req.query.category){
+			getByCategory(req, res);
+		}
 
+		// Else Display all ordered by time
+		else{
+			const findAllQs = new Promise(function(fulfill, reject) {
+			Question.find((err, result)=>{
+				if(!err){
+					// order by time
+					result = result.reverse('createdAt');				
+					result.forEach((ele)=>{
+						// find all the suggestions for each question
+						Suggestion.find({question:ele._id}, (err, sugs)=>{
+							if(sugs.length != 0){
+								ele.suggestions = sugs.sort('likes');
+							}
+						});
+						// find profile picture for each question
+						User.findOne({username: ele.user.name}, (err, poster)=>{
+							ele.user.pic = poster.pic;
+						});
+					});
 
+					fulfill(result);
+				}else{
+					console.log(err);
+					res.send(err);
+				}
+
+				reject(err);
+				});
+			});
+
+			findAllQs.then((result)=>{
 				if(req.session.hasOwnProperty('username')){
 					User.findOne({username: req.session.username}, (err, u) => {
 						if(!err) res.render('index', {user: u, question: result});
 						else console.log(err);
 					});
 				}else{
-					res.render('index',  {question: result});	
+					res.redirect('/register');	
 				}
-
-	
-
-			}else{
-				console.log(err);
-				res.send(err);
-			}
-		});
-		/*.then((result)=>{
-			if(req.session.hasOwnProperty('username')){
-				User.findOne({username: req.session.username}, (err, u) => {
-					if(!err) res.render('index', {user: u, question: result});
-					else console.log(err);
-				});
-			}else{
-				res.render('index',  {question: result});	
-			}
-		});*/
+			}, console.log);
+		}
 	}		
 });
 
@@ -93,13 +106,35 @@ app.post('/', (req,res)=>{
 			suggestions: [],
 			createdAt: new Date()
 		}).save();
+
 		res.redirect('/');
+		
 	}else{
 		res.redirect('/register');
 	}
 });
 
+app.post('/like', (req, res)=>{
 
+	const like = new Promise(function(fulfill, reject){
+		const sug = Suggestion.findOneAndUpdate(
+			{_id: req.body.id, likers: {$nin:[req.session.username]}},
+			{$inc: {likes: 1}, $push: {likers: req.session.username}},
+			{projection: { "text" : 1 }}
+		);
+		fulfill(sug);
+		reject();
+	});
+	
+	like.then((doubleLike)=>{
+		if(doubleLike){
+			res.send({status:200});
+		}else{
+			res.send({status:500});
+		}
+	});
+
+});
 
 app.get('/search', (req,res)=>{
 	Question.find({ "text": { "$regex": ".*" + req.query.s + ".*", "$options": 'i'} }, (err, result)=>{
@@ -128,8 +163,29 @@ app.get('/search', (req,res)=>{
 	});
 });
 
+app.post('/comment', (req,res)=>{
+	if(req.session.hasOwnProperty('username')){
+		User.findOne({username: req.session.username}, (err, user)=>{
+			new Suggestion({
+				text: req.body.text,
+				user: {name: user.username, pic: user.pic},		
+				likes: 0,
+				likers: [],
+				question: req.body.q,
+				createdAt: new Date()
+			}).save();
+			res.send({username: user.username, pic: user.pic, text:req.body.text, status: 200});
+		});
 
-//Auth stuff
+		
+	}else{
+		res.send({status: 300, location: '/register'});
+	}
+	
+});
+
+
+// Auth stuff
 app.get('/register', (req, res)=>{
 	res.render('register');
 });
@@ -227,7 +283,6 @@ app.post('/login', (req,res)=>{
 	}
 });
 
-
 app.get('/logout', (req,res)=>{
 	req.session.destroy((err)=>{
 		if(!err){
@@ -238,53 +293,49 @@ app.get('/logout', (req,res)=>{
 		}
 	});
 });
+// End of Auth
 
-app.post('/comment', (req,res)=>{
-	console.log(req.body.text);
-	console.log(req.body.q);
-
-	/*
-	if(req.session.hasOwnProperty('username')){
-		new Suggestion({
-			text: req.body.text,
-			user: {name: req.session.username, pic: ""},		
-			likes: 0,
-			likers: [],
-			question: req.body.q,
-			createdAt: new Date()
-		}).save();
-		res.redirect('/');
-	}else{
-		res.redirect('/register');
-	}
-	*/
-});
 
 function getByCategory(req, res){
-	Question.find({category: req.query.category}, (err, result)=>{
-		if(!err){
-			result = result.reverse('createdAt');
-			result.forEach((ele)=>{
-				Suggestion.find({_id:ele._id}, (err, sugs)=>{
-					ele.suggestions = sugs.reverse('createdAt');
+	const findAllQs = new Promise(function(fulfill, reject) {
+		Question.find({category: req.query.category}, (err, result)=>{
+			if(!err){
+				// order by time
+				result = result.reverse('createdAt');				
+				result.forEach((ele)=>{
+					// find all the suggestions for each question
+					Suggestion.find({question:ele._id}, (err, sugs)=>{
+						if(sugs.length != 0){
+							ele.suggestions = sugs.sort('likes');
+						}
+					});
+					// find profile picture for each question
+					User.findOne({username: ele.user.name}, (err, poster)=>{
+						ele.user.pic = poster.pic;
+					});
 				});
-				User.findOne({username: ele.user.name}, (err, poster)=>{
-					ele.user.pic = poster.pic;
-				});
-			});
-			if(req.session.hasOwnProperty('username')){
-				User.findOne({username: req.session.username}, (err, u) => {
-					if(!err) res.render('index', {user: u, question: result});
-					else console.log(err);
-				});
+
+				fulfill(result);
 			}else{
-				res.render('index',  {question: result});	
+				console.log(err);
+				res.send(err);
 			}
-		}else{
-			console.log(err);
-			res.send(err);
-		}
+
+			reject(err);
+		});
 	});
+
+	findAllQs.then((result)=>{
+		if(req.session.hasOwnProperty('username')){
+			User.findOne({username: req.session.username}, (err, u) => {
+				if(!err) res.render('index', {user: u, question: result});
+				else console.log(err);
+			});
+		}else{
+			res.redirect('/register');	
+		}
+	}, console.log);
+
 }
 
 app.listen(port);

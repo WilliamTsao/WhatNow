@@ -19,15 +19,18 @@ const Question = new mongoose.Schema({
 		name: String,
 		pic: String
 	},
-	suggestions: [mongoose.Schema.Types.ObjectId],
+	suggestions: [],
 	createdAt: Date
 });
 
 const Suggestion = new mongoose.Schema({
 	text: String,
-	user: mongoose.Schema.Types.ObjectId,
+	user: {
+		name: String,
+		pic: String
+	},
 	likes: Number,
-	likers: [mongoose.Schema.Types.ObjectId],
+	likers: [String],
 	question: mongoose.Schema.Types.ObjectId,
 	createdAt: Date
 });

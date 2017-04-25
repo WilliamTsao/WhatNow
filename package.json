@@ -26,10 +26,12 @@
     "body-parser": "^1.17.1",
     "express": "^4.15.2",
     "express-session": "^1.15.2",
+    "handlebars-intl": "^1.1.2",
     "hbs": "^4.0.1",
     "mongoose": "^4.9.2",
     "mongoose-url-slugs": "^0.2.1",
-    "parsleyjs": "^2.7.0"
+    "parsleyjs": "^2.7.0",
+    "socket.io": "^1.7.3"
   },
   "devDependencies": {
     "eslint": "^3.18.0"
