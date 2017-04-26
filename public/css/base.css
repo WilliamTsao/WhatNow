@@ -254,9 +254,16 @@ header nav ul li:hover{
 }
 .comments .fa{
 	margin-right: 10px;
+	cursor: pointer;
 }
 .comments .fa:hover{
 	color: #ed4956;
+}
+.comments .unlike{
+	color: #ed4956;
+}
+.comments .unlike:hover{
+	color: #787878;
 }
 .comments .comment_wrapper .timestamp{
 	font-size: 14px;
@@ -332,7 +339,7 @@ header nav ul li:hover{
 .right .post{
 	background-color: white;
 	margin: 1px 0;
-	padding: 24px;
+	padding: 18px;
 }
 .right .post:hover{
 	background-color: #fafafa;
@@ -342,7 +349,7 @@ header nav ul li:hover{
 	font-size: 18px;
 }
 .right .post p{
-	margin: 20px 0;
+	margin: 15px 0;
 }
 
 .right .post .bottom{

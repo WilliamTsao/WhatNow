@@ -29,7 +29,7 @@ $(document).ready(function() {
 									<a>@${data.username}</a>
 									<span class=comment>${text}</span>
 									<div>
-										<span><i class="fa fa-heart" aria-hidden="true"></i>
+										<span><i class="fa fa-heart" aria-hidden="true" id=${data.id}></i>
 										0 Likes</span>
 										<span class="timestamp">Just Now</span>
 									</div>
@@ -44,19 +44,47 @@ $(document).ready(function() {
 		}
 	});
 
-	$('.fa-heart').on('click', (event)=> {	
-		$.ajax({
-			url: '/like',
-			type: 'POST', 
-			data: { id: event.target.id },
-			success: function(data) {
-				if(data.status >= 200 && data.status < 300) {
-					$(event.target).parent().children('.number').text((parseInt($(event.target).parent().children('.number').text()) + 1));
-				}else{
-					console.log("Double liked");
+	$('.fa-heart').on('click', (event)=> {
+		console.log(event.target);
+		if(event.target.getAttribute('liked') === undefined || event.target.getAttribute('liked') !== 'true'){
+			$.ajax({
+				url: '/like',
+				type: 'POST',
+				data: { id: event.target.id },
+				success: function() {
+					$(event.target).parent().children('.number').text((parseInt($(event.target).parent().children('.number').text()) + 1));			
+					$(event.target).attr({ liked: 'true' });
+					$(event.target).css('color', '#ed4956');
+						$(event.target).hover(function() {
+							/* Stuff to do when the mouse enters the element */
+							$(this).css('color', '#787878');
+						}, function() {
+							/* Stuff to do when the mouse leaves the element */
+							$(this).css('color', '#ed4956');
+						});		
 				}
-			}
-		});
+			});
+		}else{
+			console.log("unlike");
+			$.ajax({
+				url: '/unlike',
+				type: 'POST',
+				data: { id: event.target.id },
+				success: function() {					
+						$(event.target).parent().children('.number').text((parseInt($(event.target).parent().children('.number').text()) - 1));
+						$(event.target).css('color', '#787878');
+						$(event.target).attr({ liked: 'false' });
+						$(event.target).hover(function() {
+							/* Stuff to do when the mouse enters the element */
+							$(this).css('color', '#ed4956');
+						}, function() {
+							/* Stuff to do when the mouse leaves the element */
+							$(this).css('color', '#787878');
+						});
+								
+				}
+			});
+		}
 	});
 	
 	

@@ -124,8 +124,12 @@
 						<span class=comment>{{this.text}}</span>
 
 						<div>
-							<span><i class="fa fa-heart" aria-hidden="true" id={{this._id}}></i>
-							<span class='number'>{{this.likes}}</span> Likes</span>
+							<span>
+								<i class="fa fa-heart {{#ifIn this.likers ../../user.username }} unlike{{/ifIn}}" aria-hidden="true" id="{{this._id}}" 
+								{{#ifIn this.likers ../../user.username }} 
+									liked = "true"
+								{{/ifIn}}></i>
+								<span class='number'>{{this.likes}}</span> Likes</span>
 							<span class="timestamp">{{formatRelative this.createdAt}}</span>
 						</div>
 					</div>
@@ -154,24 +158,10 @@
 		</form>
 		<section class='trending'>
 			<h2>Trending Posts</h2>
-			<a href="/question/this.slug">
-				<div class='post'>
-					<h3>@dickhead101</h3>
-					<p>
-						What to do around pebble beach area?
-					</p>
-					<div class='bottom'><i class="fa fa-comment" aria-hidden="true"></i>Suggestions</div>
-					<div class="timestamp">3:10 PM - 31 Jul 2016</div>
-					<div class="clear"></div>
-				</div>
-			</a>
-			
-
-
-			{{#each hotPost}}
-				<a href="/question/{{this.slug}}">
+			{{#each top}}
+				<a>
 					<div class='post'>
-						<h3>{{this.user.username}}</h3>
+						<h3>@{{this.user.name}}</h3>
 						<p>
 							{{this.text}}
 						</p>
@@ -185,35 +175,16 @@
 
 		<section class='my_posts'>
 			<h2>Your Posts</h2>
-			<a href="/question/this.slug">
-				<div class='post'>
-					<h3>@dickhead101</h3>
-					<p>
-						What to do around pebble beach area?
-					</p>
-					<div class='bottom'><i class="fa fa-comment" aria-hidden="true"></i>Suggestions</div>
-					<div class="timestamp">3:10 PM - 31 Jul 2016</div>
-					<div class="clear"></div>
-				</div>
-			</a>
-			<a href="/question/this.slug">
-				<div class='post'>
-					<h3>@dickhead101</h3>
-					<p>
-						What to do around pebble beach area?
-					</p>
-					<div class='bottom'><i class="fa fa-comment" aria-hidden="true"></i>Suggestions</div>
-					<div class="timestamp">3:10 PM - 31 Jul 2016</div>
-					<div class="clear"></div>
-				</div>
-			</a>
-			{{#each hotPost}}
-				<a href="/question/{{this.slug}}">
-					<div>
-						<h3>{{this.username}}</h3>
+			{{#each yours}}
+				<a>
+					<div class='post'>
+						<h3>@{{this.user.name}}</h3>
 						<p>
 							{{this.text}}
 						</p>
+						<div class='bottom'><i class="fa fa-comment" aria-hidden="true"></i>Suggestions</div>
+						<div class="timestamp">{{formatRelative this.createdAt}}</div>
+						<div class="clear"></div>
 					</div>
 				</a>
 			{{/each}}

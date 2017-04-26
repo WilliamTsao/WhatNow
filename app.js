@@ -18,6 +18,12 @@ const hbs = require('hbs');
 const HandlebarsIntl = require('handlebars-intl');
 HandlebarsIntl.registerWith(hbs);
 
+hbs.registerHelper('ifIn', function(list, currentUser, options) {
+	if(list.includes(currentUser)){
+		return options.fn(this);
+	}
+});
+
 //body-parser
 const bodyParser = require('body-parser');
 app.use(bodyParser.urlencoded({extended: false}));
@@ -56,37 +62,42 @@ app.get('/', (req,res)=>{
 		// Else Display all ordered by time
 		else{
 			const findAllQs = new Promise(function(fulfill, reject) {
-			Question.find((err, result)=>{
-				if(!err){
-					// order by time
-					result = result.reverse('createdAt');				
-					result.forEach((ele)=>{
-						// find all the suggestions for each question
-						Suggestion.find({question:ele._id}, (err, sugs)=>{
-							if(sugs.length != 0){
-								ele.suggestions = sugs.sort('likes');
-							}
+				Question.find((err, result)=>{
+					if(!err){
+						// order by time
+						result = result.reverse('createdAt');				
+						result.forEach((ele)=>{
+							// find all the suggestions for each question
+							Suggestion.find({question:ele._id}, (err, sugs)=>{
+								if(sugs.length != 0){
+									ele.suggestions = sugs.sort(function(a, b) {return b.likes - a.likes; });
+								}
+							});
+							// find profile picture for each question
+							User.findOne({username: ele.user.name}, (err, poster)=>{
+								ele.user.pic = poster.pic;
+							});
 						});
-						// find profile picture for each question
-						User.findOne({username: ele.user.name}, (err, poster)=>{
-							ele.user.pic = poster.pic;
-						});
-					});
-
-					fulfill(result);
-				}else{
-					console.log(err);
-					res.send(err);
-				}
-
-				reject(err);
+						fulfill(result);
+					}else{
+						console.log(err);
+						res.send(err);
+					}
+					reject(err);
 				});
 			});
-
+		
 			findAllQs.then((result)=>{
 				if(req.session.hasOwnProperty('username')){
 					User.findOne({username: req.session.username}, (err, u) => {
-						if(!err) res.render('index', {user: u, question: result});
+						if(!err) {
+							let top = result.slice(0);
+							top = top.sort(function(a, b) {return b.suggestions.length - a.suggestions.length;}).slice(0, 3);
+							const yours = result.filter(function(ele) {
+								return ele.user.name === req.session.username;
+							});
+							res.render('index', {user: u, question: result, top:top, yours:yours});
+						}
 						else console.log(err);
 					});
 				}else{
@@ -115,25 +126,31 @@ app.post('/', (req,res)=>{
 });
 
 app.post('/like', (req, res)=>{
-
-	const like = new Promise(function(fulfill, reject){
-		const sug = Suggestion.findOneAndUpdate(
-			{_id: req.body.id, likers: {$nin:[req.session.username]}},
-			{$inc: {likes: 1}, $push: {likers: req.session.username}},
-			{projection: { "text" : 1 }}
-		);
-		fulfill(sug);
-		reject();
-	});
-	
-	like.then((doubleLike)=>{
-		if(doubleLike){
-			res.send({status:200});
-		}else{
-			res.send({status:500});
+	Suggestion.findOneAndUpdate(
+		{_id: req.body.id},
+		{$inc: {likes: 1}, $push: {likers: req.session.username}},
+		{new: true},
+		function(err, doc){
+			if(err){
+				console.log("Something wrong when updating data!");
+			}
 		}
-	});
+	);
+	res.send();
+});
 
+app.post('/unlike', (req, res)=>{
+	Suggestion.findOneAndUpdate(
+		{_id: req.body.id},
+		{$inc: {likes: -1}, $pull: {likers: req.session.username}},
+		{new: true},
+		function(err, doc){
+			if(err){
+				console.log("Something wrong when updating data!");
+			}
+		}
+	);
+	res.send();
 });
 
 app.get('/search', (req,res)=>{
@@ -173,8 +190,9 @@ app.post('/comment', (req,res)=>{
 				likers: [],
 				question: req.body.q,
 				createdAt: new Date()
-			}).save();
-			res.send({username: user.username, pic: user.pic, text:req.body.text, status: 200});
+			}).save((err, newSuggestion)=>{
+				res.send({username: newSuggestion.user.name, pic: newSuggestion.user.pic, text: newSuggestion.text, id: newSuggestion.id, status: 200});
+			});	
 		});
 
 		
