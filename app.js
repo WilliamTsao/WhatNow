@@ -154,30 +154,48 @@ app.post('/unlike', (req, res)=>{
 });
 
 app.get('/search', (req,res)=>{
-	Question.find({ "text": { "$regex": ".*" + req.query.s + ".*", "$options": 'i'} }, (err, result)=>{
-		if(!err){
-			result = result.reverse('createdAt');
-			result.forEach((ele)=>{
-				Suggestion.find({_id:ele._id}, (err, sugs)=>{
-					ele.suggestions = sugs.reverse('createdAt');
+	const findAllQs = new Promise(function(fulfill, reject) {
+		Question.find((err, result)=>{
+			if(!err){
+				// order by time
+				result = result.reverse('createdAt');				
+				result.forEach((ele)=>{
+					// find all the suggestions for each question
+					Suggestion.find({question:ele._id}, (err, sugs)=>{
+						if(sugs.length != 0){
+							ele.suggestions = sugs.sort(function(a, b) {return b.likes - a.likes; });
+						}
+					});
+					// find profile picture for each question
+					User.findOne({username: ele.user.name}, (err, poster)=>{
+						ele.user.pic = poster.pic;
+					});
 				});
-				User.findOne({username: ele.user.name}, (err, poster)=>{
-					ele.user.pic = poster.pic;
-				});
-			});
-			if(req.session.hasOwnProperty('username')){
-				User.findOne({username: req.session.username}, (err, u) => {
-					if(!err) res.render('index', {user: u, question: result});
-					else console.log(err);
-				});
+				fulfill(result);
 			}else{
-				res.render('index',  {question: result});	
+				console.log(err);
+				res.send(err);
 			}
-		}else{
-			console.log(err);
-			res.send(err);
-		}
+			reject(err);
+		});
 	});
+	findAllQs.then((result)=>{
+		if(req.session.hasOwnProperty('username')){
+			User.findOne({username: req.session.username}, (err, u) => {
+				if(!err) {
+					let top = result.slice(0);
+					top = top.sort(function(a, b) {return b.suggestions.length - a.suggestions.length;}).slice(0, 3);
+					const yours = result.filter(function(ele) {
+						return ele.user.name === req.session.username;
+					});
+					res.render('index', {user: u, question: result.filter((ele)=>{return ele.text.toLowerCase().includes(req.query.s.toLowerCase())}), top:top, yours:yours});
+				}
+				else console.log(err);
+			});
+		}else{
+			res.redirect('/register');	
+		}
+	}, console.log);
 });
 
 app.get('/post/:slug', (req, res)=>{
@@ -262,7 +280,21 @@ app.post('/comment', (req,res)=>{
 	
 });
 
+/*
+app.get('/me', (req,res)=>{
+	if(!req.session.hasOwnProperty('username')){
+		res.redirect('/register');
+	}else{
+		User.findOne({username: req.session.username}, (err, u) => {
+			if(!err) {
+				res.render('user', {user: u});
+			}
+			else console.log(err);
+		});
+	}
+});
 
+*/
 // Auth stuff
 app.get('/register', (req, res)=>{
 	res.render('register');
