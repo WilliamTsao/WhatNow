@@ -24,7 +24,8 @@ header section figure{
 	margin-left: 84px;
 }
 header .logo{
-	width: 100px;
+	margin-top:20px;
+	width: 50px;
 }
 
 header .user{
@@ -69,7 +70,7 @@ header form input{
 	width: 321px;
 	font-family: 'Lato', sans-serif;
 	font-size: 16px;
-	background-color: #42a5f5;
+	background-color: rgba(255,255,255,0.35);
 	border: none;
 	color: white;
 	padding: 13px;
@@ -120,7 +121,7 @@ select::-ms-expand {
 
 header form .select-wrapper{
 	display: inline-block;
-	background-color: #42a5f5;
+	background-color: rgba(255,255,255,0.35);
 	margin-right: 22px;
 	margin-top: 25px;
 	border-radius: 2px;

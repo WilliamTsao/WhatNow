@@ -180,6 +180,66 @@ app.get('/search', (req,res)=>{
 	});
 });
 
+app.get('/post/:slug', (req, res)=>{
+	// Require Login/Signup
+	if(!req.session.hasOwnProperty('username')){
+		res.redirect('/register');
+	}
+	else{
+		// If category is selected, display only that category
+		if(req.query.category){
+			getByCategory(req, res);
+		}
+
+		// Else Display all ordered by time
+		else{
+			const findAllQs = new Promise(function(fulfill, reject) {
+				Question.find((err, result)=>{
+					if(!err){
+						// order by time
+						result = result.reverse('createdAt');				
+						result.forEach((ele)=>{
+							// find all the suggestions for each question
+							Suggestion.find({question:ele._id}, (err, sugs)=>{
+								if(sugs.length != 0){
+									ele.suggestions = sugs.sort(function(a, b) {return b.likes - a.likes; });
+								}
+							});
+							// find profile picture for each question
+							User.findOne({username: ele.user.name}, (err, poster)=>{
+								ele.user.pic = poster.pic;
+							});
+						});
+						fulfill(result);
+					}else{
+						console.log(err);
+						res.send(err);
+					}
+					reject(err);
+				});
+			});
+		
+			findAllQs.then((result)=>{
+				if(req.session.hasOwnProperty('username')){
+					User.findOne({username: req.session.username}, (err, u) => {
+						if(!err) {
+							let top = result.slice(0);
+							top = top.sort(function(a, b) {return b.suggestions.length - a.suggestions.length;}).slice(0, 3);
+							const yours = result.filter(function(ele) {
+								return ele.user.name === req.session.username;
+							});
+							res.render('index', {user: u, question: result.filter((ele)=>{return ele.slug === req.params.slug}), top:top, yours:yours});
+						}
+						else console.log(err);
+					});
+				}else{
+					res.redirect('/register');	
+				}
+			}, console.log);
+		}
+	}		
+});
+
 app.post('/comment', (req,res)=>{
 	if(req.session.hasOwnProperty('username')){
 		User.findOne({username: req.session.username}, (err, user)=>{
@@ -346,7 +406,15 @@ function getByCategory(req, res){
 	findAllQs.then((result)=>{
 		if(req.session.hasOwnProperty('username')){
 			User.findOne({username: req.session.username}, (err, u) => {
-				if(!err) res.render('index', {user: u, question: result});
+				const colors = {'relationship': '#FF4136', 'travel': '#31bc40', 'food': '#B10DC9', 'sports': '#FF851B', 'technology': '#39CCCC', 'career': '#F012BE'};
+				if(!err) {
+					let top = result.slice(0);
+					top = top.sort(function(a, b) {return b.suggestions.length - a.suggestions.length;}).slice(0, 3);
+					const yours = result.filter(function(ele) {
+						return ele.user.name === req.session.username;
+					});
+					res.render('index', {user: u, question: result, color: colors[req.query.category], top:top, yours:yours});
+				}
 				else console.log(err);
 			});
 		}else{

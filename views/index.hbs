@@ -1,6 +1,6 @@
 <header>
 	<section>
-		<figure><img class='logo' src="/images/logo.svg"></figure>
+		<!-- <figure><img class='logo' src="/images/logo.png"></figure> -->
 		<section class='user'>	
 			{{#if user}}
 				<div class='currentUser'>
@@ -48,60 +48,22 @@
 			<a href='/?category=sports'><li>Sports</li></a>
 			<a href='/?category=technology'><li>Technology</li></a>
 			<a href ="/?category=career"><li>Career</li></a>
-			<li>More</li>
 		</ul>	
 	</nav>
 </header>
 
+<style type="text/css">
+	header{
+		background-color: {{color}};
+	}
+	header nav ul li{
+		border-bottom-color: {{color}};
+	}
+
+</style>
+
 <div class='wrapper'>
 	<div class='feed'>
-	<!-- 
-		<div class="post">	
-			<img src="/images/dickhead101.jpg">
-			<div class='poster'>
-				<h2>@dickhead101</h2>
-			</div>
-			<div class="clear"></div>
-			<p>
-				What to do around pebble beach area?
-			</p>
-			<div class='bottom'><i class="fa fa-comment" aria-hidden="true"></i>Suggestions</div>
-			<div class="timestamp">3:10 PM - 31 Jul 2016</div>
-			<section class='comments'>
-				<div class="comment_wrapper">
-					<img src="/images/dickhead101.jpg">
-					<a>@dickhead101</a>
-					<span class=comment>The Lone Cypress</span>
-
-					<div>
-						<span><i class="fa fa-heart" aria-hidden="true"></i>
-						5 Likes</span>
-						<span class="timestamp">3:10 PM - 31 Jul 2016</span>
-					</div>
-				</div>
-
-				<div class='comment_wrapper'>
-					<img src="/images/dickhead101.jpg">
-					<a>@dickhead101</a>
-					<span class=comment>The Lone Cypress</span>
-					
-					<div>
-						<span><i class="fa fa-heart" aria-hidden="true"></i>
-						5 Likes</span>
-						<span class="timestamp">3:10 PM - 31 Jul 2016</span>
-					</div>
-				</div>
-				<div class="comment_wrapper post_comment">
-					<img src="/images/dickhead101.jpg">
-					<form method="post">
-						<input type="text" name="comment">
-					</form>
-				</div>
-			</section>
-			
-		</div>
-	-->
-
 		{{#each question}}
 			<div class="post">
 				<img src=/images/{{this.user.pic}}>
@@ -148,10 +110,6 @@
 	</div>
 
 
-
-
-
-
 	<div class='right'>
 		<form action='/search'>
 			<input type="text" name="s" placeholder='&#xf002; Search Seam' style="font-family:Arial, FontAwesome" />
@@ -159,7 +117,7 @@
 		<section class='trending'>
 			<h2>Trending Posts</h2>
 			{{#each top}}
-				<a>
+				<a href="/post/{{this.slug}}">
 					<div class='post'>
 						<h3>@{{this.user.name}}</h3>
 						<p>
@@ -176,7 +134,7 @@
 		<section class='my_posts'>
 			<h2>Your Posts</h2>
 			{{#each yours}}
-				<a>
+				<a href="/post/{{this.slug}}">
 					<div class='post'>
 						<h3>@{{this.user.name}}</h3>
 						<p>

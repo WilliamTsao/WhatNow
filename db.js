@@ -36,8 +36,8 @@ const Suggestion = new mongoose.Schema({
 });
 
 //plugin
-User.plugin(URLSlugs('username'));
-Question.plugin(URLSlugs('text'));
+User.plugin(URLSlugs('_id'));
+Question.plugin(URLSlugs('_id'));
 
 
 //register
