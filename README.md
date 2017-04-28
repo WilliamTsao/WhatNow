@@ -22,10 +22,7 @@ An Example User:
 ```javascript
 {
   username: "i_have_so_much_questions",
-  hash: // a password hash,
-  questions: // an array of references to Question documents
-  suggestions: //an array of references to Suggestion documents I've made
-  points: 0
+  hash: // a password hash
 }
 ```
 
@@ -34,8 +31,11 @@ An Example Question:
 ```javascript
 {
   text: "What To Say when you want to call in sick"
-  user: // a reference to a User that posted the question
-  suggestions: //an array of references to Suggestions documents made under this Question
+  user: {
+    name: String,
+    pic: String
+  },//user that posted this question
+  suggestions: //an array of Suggestions documents made under this Question
   createdAt: // timestamp
 }
 ```
@@ -45,10 +45,13 @@ An Example Suggestion:
 ```javascript
 {
   text: "I am taking a sick day. I plan on seeing you tomorrow. I will let you know if that changes."
-  user: // a reference to a User that posted the suggestion
+  user: {
+    name: String,
+    pic: String
+  },// user that posted this suggestion
   likes: //number of likes for this suggestion
   question: //a reference to the question that this suggestion was made for
-  likers: //an array of references to users that liked this suggestion (to prevent multiple likes for one user)
+  likers: //an array of users' name that liked this suggestion (to prevent multiple likes for one user)
   createdAt: // timestamp
 }
 ```
@@ -75,7 +78,7 @@ An Example Suggestion:
 
 ![post](documentation/search.jpeg)
 
-/:username - page for showing questions and suggestions posted by this user
+/post/:slug - page for showing one question
 
 ![username](documentation/user.jpeg)
 
@@ -86,11 +89,11 @@ An Example Suggestion:
 ## User Stories or Use Cases
 
 1. as non-registered user, I can register a new account with the site
-2. as a user, I can log in to the site
-3. as a user, I can post new questions
-4. as a user, I can seach questions/suggestions posted by other users
-5. as a user, I can post suggestions to other users' questions
-6. as a user, I can upvote suggestions that I find helpful
+2. as a registered user, I can log in to the site
+3. as a registered user, I can post new questions
+4. as a registered user, I can seach questions/suggestions posted by other users
+5. as a registered user, I can post suggestions to other users' questions
+6. as a registered user, I can like/unlike suggestions that I find helpful
 
 
 ## Research Topics

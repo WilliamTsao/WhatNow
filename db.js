@@ -6,10 +6,7 @@ mongoose.Promise = require('bluebird');
 const User = new mongoose.Schema({
 	username: String,
 	password: String,
-	pic: String,
-	questions: [mongoose.Schema.Types.ObjectId],
-	suggestions: [mongoose.Schema.Types.ObjectId],
-	points: Number
+	pic: String
 });
 
 const Question = new mongoose.Schema({

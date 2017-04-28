@@ -15,7 +15,7 @@ $(document).ready(function() {
 	$('.newComment').keypress(function (e) {
 		var key = e.which || e.keyCode;
 		if (key === 13) { // 13 is enter
-			if($(this).val() != ""){
+			if( /[^\s]/.test($(this).val()) ){
 				const text = $(this).val();
 				const q = $(this).siblings('.q').val();
 				$.ajax({
@@ -40,6 +40,9 @@ $(document).ready(function() {
 						}
 					}
 				});
+			}else{
+				e.preventDefault();
+				console.log('empty comment');
 			}
 		}
 	});
@@ -86,8 +89,24 @@ $(document).ready(function() {
 			});
 		}
 	});
-	
-	
+
+
+	//form validations
+	$('.postQ').submit(function( event ) {
+		if ( (/[^\s]/.test($( "input[type=text]" ).val()) )) {
+			console.log('Empty input');
+			return;
+		}
+		event.preventDefault();
+	});	
+
+	$('.search').submit(function( event ) {
+		if ( (/[^\s]/.test($( "input[type=text]" ).val()) )) {
+			console.log('Empty search');
+			return;
+		}
+		event.preventDefault();
+	});	
 
 });
 

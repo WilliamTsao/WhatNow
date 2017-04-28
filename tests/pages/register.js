@@ -19,5 +19,11 @@ module.exports = {
 		I.fillField('body > div > form:nth-child(1) > input[type="password"]:nth-child(3)', this.password);
 		I.click('body > div > form:nth-child(1) > input[type="submit"]:nth-child(4)');
 		I.wait(3);
+	},
+	signin(){
+		I.fillField('body > div > form:nth-child(2) > input[type="text"]:nth-child(2)', this.username);
+		I.fillField('body > div > form:nth-child(2) > input[type="password"]:nth-child(3)', this.password);
+		I.click('body > div > form:nth-child(2) > input[type="submit"]:nth-child(4)');
+		I.wait(3);
 	}
 }
