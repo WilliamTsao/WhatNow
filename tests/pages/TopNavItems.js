@@ -8,9 +8,9 @@ module.exports = {
   _init() {
     I = actor();
   },
-  //css class for top nav
-  nav : '.primary-nav',
+  //XPATH for top nav
+  nav : 'body > header > nav',
 
   //words expected to be in top nav
-  nav_ele : ["FEATURES", "TEMPLATES", "IMAGES", "LEARN", "PRICING", "MORE"]
+  nav_ele : ["News Feed", "Relationship", "Travel", "Food", "Sports", "Technology", "Career"]
 }

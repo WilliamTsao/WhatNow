@@ -4,14 +4,13 @@
   "output": "./output",
   "helpers": {
     "Nightmare": {
-      "url": "https://www.photoshelter.com/",
+      "url": "https://infinite-atoll-99335.herokuapp.com",
       "show": true
     }
   },
   "include": {
     "TopNavItems": "./pages/TopNavItems.js",
-    "signupPage": "./pages/Signup.js",
-    "signinPage": "./pages/signin.js",
+    "register": "./pages/register.js",
     "newGalleryPage": "./pages/newGallery.js"
   },
   "bootstrap": false,

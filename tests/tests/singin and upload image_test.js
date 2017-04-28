@@ -1,7 +1,7 @@
-
+/*
 Feature('Singin and upload image');
 
-Scenario('Signin and upload image to new gallery', (I, signinPage, newGalleryPage) => {
+xScenario('Signin and upload image to new gallery', (I, signinPage, newGalleryPage) => {
 	I.amOnPage('/mem/home');
 	signinPage.signin();
 	newGalleryPage.newGallery();
@@ -10,3 +10,4 @@ Scenario('Signin and upload image to new gallery', (I, signinPage, newGalleryPag
 	I.wait(5);
 	I.dontSee('0/1');
 });
+*/
