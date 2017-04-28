@@ -27,7 +27,9 @@ $(document).ready(function() {
 						    $( `<div class="comment_wrapper">
 									<img src="/images/${data.pic}">
 									<a>@${data.username}</a>
-									<span class=comment>${text}</span>
+									<span class=comment>
+											${text}
+									</span>
 									<div>
 										<span><i class="fa fa-heart" aria-hidden="true" id=${data.id}></i>
 										0 Likes</span>
