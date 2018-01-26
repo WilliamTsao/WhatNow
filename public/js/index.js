@@ -41,7 +41,7 @@ $(document).ready(function() {
 									</span>
 									<div>
 										<span><i class="fa fa-heart" aria-hidden="true" id=${data.id} liked="false"></i>
-										0 Likes</span>
+										<span class="number">0</span> Likes</span>
 										<span class="timestamp">Just Now</span>
 									</div>
 								</div>` ).insertBefore($(e.target).parent().parent());
@@ -58,9 +58,10 @@ $(document).ready(function() {
 		}
 	});
 
-	$('.fa-heart').on('click', (event)=> {
+	$(document).on('click', '.fa-heart', (event)=> {
 		console.log(event.target);
 		if(event.target.getAttribute('liked') === undefined || event.target.getAttribute('liked') !== 'true'){
+			console.log('like')
 			$.ajax({
 				url: '/like',
 				type: 'POST',
