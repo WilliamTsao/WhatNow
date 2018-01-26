@@ -147,7 +147,13 @@ header form .select-wrapper:after{
 	right: 15px;
 }
 
-
+header form.postQ input[type=submit]{
+	height: 42px;
+    margin-top: 0;
+    font-size: 15px;
+    width: 100px;
+	cursor: pointer;
+}
 
 header nav ul {
 	margin: 0 50px;

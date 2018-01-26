@@ -102,9 +102,7 @@ $(document).ready(function() {
 		}
 	});
 
-	$('.postQ').on('keypress', 'input, select', function (e) {
-		alert('hi');
-	}
+
 	//TODO: implement form validations
 	$('.postQ').submit(function( event ) {
 		console.log(event.target.child("input[type=text]").val())
