@@ -1,5 +1,14 @@
+function escapeHtml(unsafe) {
+    return unsafe
+         .replace(/&/g, "&amp;")
+         .replace(/</g, "&lt;")
+         .replace(/>/g, "&gt;")
+         .replace(/"/g, "&quot;")
+         .replace(/'/g, "&#039;");
+ }
+
 $(document).ready(function() {
-	
+
 	//toggle comment box
 	$('.bottom').on('click', (event)=> {
 		event.preventDefault();
@@ -20,15 +29,15 @@ $(document).ready(function() {
 				const q = $(this).siblings('.q').val();
 				$.ajax({
 					url: '/comment',
-					type: 'POST', 
+					type: 'POST',
 					data: { text: text, q: q},
 					success: function(data) {
 						if(data.status >= 200 && data.status < 300){
+							let safeTxt = escapeHtml(text);
 						    $( `<div class="comment_wrapper">
-									<img src="/images/${data.pic}">
 									<a>@${data.username}</a>
 									<span class=comment>
-											${text}
+											${safeTxt}
 									</span>
 									<div>
 										<span><i class="fa fa-heart" aria-hidden="true" id=${data.id}></i>
@@ -57,7 +66,7 @@ $(document).ready(function() {
 				type: 'POST',
 				data: { id: event.target.id },
 				success: function() {
-					$(event.target).parent().children('.number').text((parseInt($(event.target).parent().children('.number').text()) + 1));			
+					$(event.target).parent().children('.number').text((parseInt($(event.target).parent().children('.number').text()) + 1));
 					$(event.target).attr({ liked: 'true' });
 					$(event.target).css('color', '#ed4956');
 						$(event.target).hover(function() {
@@ -66,7 +75,7 @@ $(document).ready(function() {
 						}, function() {
 							/* Stuff to do when the mouse leaves the element */
 							$(this).css('color', '#ed4956');
-						});		
+						});
 				}
 			});
 		}else{
@@ -75,7 +84,7 @@ $(document).ready(function() {
 				url: '/unlike',
 				type: 'POST',
 				data: { id: event.target.id },
-				success: function() {					
+				success: function() {
 						$(event.target).parent().children('.number').text((parseInt($(event.target).parent().children('.number').text()) - 1));
 						$(event.target).css('color', '#787878');
 						$(event.target).attr({ liked: 'false' });
@@ -86,7 +95,7 @@ $(document).ready(function() {
 							/* Stuff to do when the mouse leaves the element */
 							$(this).css('color', '#787878');
 						});
-								
+
 				}
 			});
 		}
@@ -100,7 +109,7 @@ $(document).ready(function() {
 			return;
 		}
 		event.preventDefault();
-	});	
+	});
 
 	$('.search').submit(function( event ) {
 		if ( (/[^\s]/.test($( "input[type=text]" ).val()) )) {
@@ -108,7 +117,7 @@ $(document).ready(function() {
 			return;
 		}
 		event.preventDefault();
-	});	
+	});
 
 });
 

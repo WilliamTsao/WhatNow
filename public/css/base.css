@@ -48,7 +48,7 @@ header .user .currentUser div{
 	padding-top: 2px;
 	padding-left: 2px;
 	background-color: rgba(255,255,255,0.6);
-	border-radius: 50%;	
+	border-radius: 50%;
 	text-align: center;
 	font-size: 21px;
 	margin: 10px 15px;
@@ -56,16 +56,16 @@ header .user .currentUser div{
 header .user .currentUser div .fa{
 	font-size: 23px;
 }
-header .user .currentUser img{
+/* header .user .currentUser img{
 	width: 50px;
 	border:1px white solid;
 	border-radius: 50%;
 	background-color: white;
-}
+} */
 /*xxxxxxx*/
 header form{
 	text-align: center;
-	height: 150px;	
+	height: 150px;
 }
 
 header form input{
@@ -186,11 +186,11 @@ header nav ul li:hover{
 	margin-bottom: 20px;
 	box-shadow: 0px 1px 4px rgba(0,0,0,0.11);
 }
-.feed .post img{
+/* .feed .post img{
 	height: 36px;
 	float: left;
 	border-radius: 2px;
-}
+} */
 .feed .post .poster{
 	float: left;
 	margin-left: 10px;
@@ -211,7 +211,7 @@ header nav ul li:hover{
 
 .feed .post .bottom{
 	color: #444444;
-	float: left; 
+	float: left;
 	margin-right: 25px;
 }
 .bottom{
@@ -240,9 +240,9 @@ header nav ul li:hover{
 .comments .comment{
 	color:#444444;
 }
-.comments img{
+/* .comments img{
 	margin-right: 11px;
-}
+} */
 .comments a{
 	color: #628ab5;
 	margin-right: 20px;

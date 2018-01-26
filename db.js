@@ -5,16 +5,14 @@ mongoose.Promise = require('bluebird');
 //schema goes here
 const User = new mongoose.Schema({
 	username: String,
-	password: String,
-	pic: String
+	password: String
 });
 
 const Question = new mongoose.Schema({
 	text: String,
 	category: String,
 	user: {
-		name: String,
-		pic: String
+		name: String
 	},
 	suggestions: [],
 	createdAt: Date
@@ -23,8 +21,7 @@ const Question = new mongoose.Schema({
 const Suggestion = new mongoose.Schema({
 	text: String,
 	user: {
-		name: String,
-		pic: String
+		name: String
 	},
 	likes: Number,
 	likers: [String],

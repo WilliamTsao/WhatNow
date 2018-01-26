@@ -32,8 +32,8 @@ app.use(bodyParser.urlencoded({extended: false}));
 const session = require('express-session');
 const sessionOptions = {
 	secret: 'secret cookie thang',
-	saveUninitialized: false, 
-	resave: false, 
+	saveUninitialized: false,
+	resave: false,
 };
 app.use(session(sessionOptions));
 
@@ -65,7 +65,7 @@ app.get('/', (req,res)=>{
 				Question.find((err, result)=>{
 					if(!err){
 						// order by time
-						result = result.reverse('createdAt');				
+						result = result.reverse('createdAt');
 						result.forEach((ele)=>{
 							// find all the suggestions for each question
 							Suggestion.find({question:ele._id}, (err, sugs)=>{
@@ -73,10 +73,7 @@ app.get('/', (req,res)=>{
 									ele.suggestions = sugs.sort(function(a, b) {return b.likes - a.likes; });
 								}
 							});
-							// find profile picture for each question
-							User.findOne({username: ele.user.name}, (err, poster)=>{
-								ele.user.pic = poster.pic;
-							});
+
 						});
 						fulfill(result);
 					}else{
@@ -86,7 +83,7 @@ app.get('/', (req,res)=>{
 					reject(err);
 				});
 			});
-		
+
 			findAllQs.then((result)=>{
 				if(req.session.hasOwnProperty('username')){
 					User.findOne({username: req.session.username}, (err, u) => {
@@ -101,11 +98,11 @@ app.get('/', (req,res)=>{
 						else console.log(err);
 					});
 				}else{
-					res.redirect('/register');	
+					res.redirect('/register');
 				}
 			}, console.log);
 		}
-	}		
+	}
 });
 
 app.post('/', (req,res)=>{
@@ -113,13 +110,13 @@ app.post('/', (req,res)=>{
 		new Question({
 			text: req.body.verb + " " + req.body.text,
 			category: req.body.category,
-			user: {name: req.session.username, pic: ""},
+			user: {name: req.session.username},
 			suggestions: [],
 			createdAt: new Date()
 		}).save();
 
 		res.redirect('/');
-		
+
 	}else{
 		res.redirect('/register');
 	}
@@ -158,7 +155,7 @@ app.get('/search', (req,res)=>{
 		Question.find((err, result)=>{
 			if(!err){
 				// order by time
-				result = result.reverse('createdAt');				
+				result = result.reverse('createdAt');
 				result.forEach((ele)=>{
 					// find all the suggestions for each question
 					Suggestion.find({question:ele._id}, (err, sugs)=>{
@@ -166,10 +163,7 @@ app.get('/search', (req,res)=>{
 							ele.suggestions = sugs.sort(function(a, b) {return b.likes - a.likes; });
 						}
 					});
-					// find profile picture for each question
-					User.findOne({username: ele.user.name}, (err, poster)=>{
-						ele.user.pic = poster.pic;
-					});
+
 				});
 				fulfill(result);
 			}else{
@@ -193,7 +187,7 @@ app.get('/search', (req,res)=>{
 				else console.log(err);
 			});
 		}else{
-			res.redirect('/register');	
+			res.redirect('/register');
 		}
 	}, console.log);
 });
@@ -215,7 +209,7 @@ app.get('/post/:slug', (req, res)=>{
 				Question.find((err, result)=>{
 					if(!err){
 						// order by time
-						result = result.reverse('createdAt');				
+						result = result.reverse('createdAt');
 						result.forEach((ele)=>{
 							// find all the suggestions for each question
 							Suggestion.find({question:ele._id}, (err, sugs)=>{
@@ -223,10 +217,7 @@ app.get('/post/:slug', (req, res)=>{
 									ele.suggestions = sugs.sort(function(a, b) {return b.likes - a.likes; });
 								}
 							});
-							// find profile picture for each question
-							User.findOne({username: ele.user.name}, (err, poster)=>{
-								ele.user.pic = poster.pic;
-							});
+
 						});
 						fulfill(result);
 					}else{
@@ -236,7 +227,7 @@ app.get('/post/:slug', (req, res)=>{
 					reject(err);
 				});
 			});
-		
+
 			findAllQs.then((result)=>{
 				if(req.session.hasOwnProperty('username')){
 					User.findOne({username: req.session.username}, (err, u) => {
@@ -251,11 +242,11 @@ app.get('/post/:slug', (req, res)=>{
 						else console.log(err);
 					});
 				}else{
-					res.redirect('/register');	
+					res.redirect('/register');
 				}
 			}, console.log);
 		}
-	}		
+	}
 });
 
 app.post('/comment', (req,res)=>{
@@ -263,21 +254,21 @@ app.post('/comment', (req,res)=>{
 		User.findOne({username: req.session.username}, (err, user)=>{
 			new Suggestion({
 				text: req.body.text,
-				user: {name: user.username, pic: user.pic},		
+				user: {name: user.username},
 				likes: 0,
 				likers: [],
 				question: req.body.q,
 				createdAt: new Date()
 			}).save((err, newSuggestion)=>{
-				res.send({username: newSuggestion.user.name, pic: newSuggestion.user.pic, text: newSuggestion.text, id: newSuggestion.id, status: 200});
-			});	
+				res.send({username: newSuggestion.user.name, text: newSuggestion.text, id: newSuggestion.id, status: 200});
+			});
 		});
 
-		
+
 	}else{
 		res.send({status: 300, location: '/register'});
 	}
-	
+
 });
 
 /*
@@ -329,17 +320,16 @@ app.post('/register', (req,res)=>{
 							username: req.body.username,
 							password: hash,
 							point: 0,
-							pic: "default_avatar.png",
 							questions: [],
 							suggestions: []
 						}).save().then((user)=>{
 							req.session.regenerate((err) => {
 								if (!err) {
-									req.session.username = user.username; 
+									req.session.username = user.username;
 									res.redirect('/');
 								}
 								else{
-									console.log(err); 
+									console.log(err);
 									res.send(err);
 								}
 							});
@@ -370,11 +360,11 @@ app.post('/login', (req,res)=>{
 						//success
 						req.session.regenerate((err) => {
 							if (!err) {
-								req.session.username = result.username; 
+								req.session.username = result.username;
 								res.redirect('/');
 							}
 							else{
-								console.log('error'); 
+								console.log('error');
 								res.send('an error occurred, please see the server logs for more information');
 							}
 						});
@@ -411,7 +401,7 @@ function getByCategory(req, res){
 		Question.find({category: req.query.category}, (err, result)=>{
 			if(!err){
 				// order by time
-				result = result.reverse('createdAt');				
+				result = result.reverse('createdAt');
 				result.forEach((ele)=>{
 					// find all the suggestions for each question
 					Suggestion.find({question:ele._id}, (err, sugs)=>{
@@ -419,10 +409,7 @@ function getByCategory(req, res){
 							ele.suggestions = sugs.sort('likes');
 						}
 					});
-					// find profile picture for each question
-					User.findOne({username: ele.user.name}, (err, poster)=>{
-						ele.user.pic = poster.pic;
-					});
+					
 				});
 
 				fulfill(result);
@@ -450,7 +437,7 @@ function getByCategory(req, res){
 				else console.log(err);
 			});
 		}else{
-			res.redirect('/register');	
+			res.redirect('/register');
 		}
 	}, console.log);
 

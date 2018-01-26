@@ -1,13 +1,10 @@
 <header>
 	<section>
 		<!-- <figure><img class='logo' src="/images/logo.png"></figure> -->
-		<section class='user'>	
+		<section class='user'>
 			{{#if user}}
 				<div class='currentUser'>
 					<a href='/logout'><div><i class="fa fa-sign-out" aria-hidden="true"></i></div></a>
-					<!-- <a href="/me"> -->
-					<img src='/images/{{user.pic}}' />
-					<!-- </a> -->
 				</div>
 			{{else}}
 				<a href="/register">
@@ -36,7 +33,7 @@
 				<option value="sports">Sports</option>
 				<option value="technology">Technology</option>
 				<option value="career">Career</option>
-				<option value="other">Other</option>	
+				<option value="other">Other</option>
 			</select>
 		</div>
 	</form>
@@ -50,7 +47,7 @@
 			<a href='/?category=sports'><li>Sports</li></a>
 			<a href='/?category=technology'><li>Technology</li></a>
 			<a href ="/?category=career"><li>Career</li></a>
-		</ul>	
+		</ul>
 	</nav>
 </header>
 
@@ -68,7 +65,6 @@
 	<div class='feed'>
 		{{#each question}}
 			<div class="post">
-				<img src=/images/{{this.user.pic}}>
 				<div class='poster'>
 					<h2>{{this.user.name}}</h2>
 				</div>
@@ -78,19 +74,18 @@
 				</p>
 				<div class='bottom'><i class="fa fa-comment" aria-hidden="false"></i>Suggestions</div>
 				<div class="timestamp">{{formatRelative this.createdAt}}</div>
-				
+
 				<section class='comments'>
 					{{#each this.suggestions}}
 					<div class="comment_wrapper">
 
-						<img src="/images/{{this.user.pic}}">
 						<a>@{{this.user.name}}</a>
 						<span class=comment>{{this.text}}</span>
 
 						<div>
 							<span>
-								<i class="fa fa-heart {{#ifIn this.likers ../../user.username }} unlike{{/ifIn}}" aria-hidden="true" id="{{this._id}}" 
-								{{#ifIn this.likers ../../user.username }} 
+								<i class="fa fa-heart {{#ifIn this.likers ../../user.username }} unlike{{/ifIn}}" aria-hidden="true" id="{{this._id}}"
+								{{#ifIn this.likers ../../user.username }}
 									liked = "true"
 								{{/ifIn}}></i>
 								<span class='number'>{{this.likes}}</span> Likes</span>
@@ -100,7 +95,6 @@
 					{{/each}}
 
 					<div class="comment_wrapper post_comment">
-						<img src="/images/{{user.pic}}">
 						<div>
 							<input class='newComment' type="text" name="comment">
 							<input class='q' type="hidden" name="q" value='{{this._id}}'>
