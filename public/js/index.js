@@ -103,21 +103,23 @@ $(document).ready(function() {
 	});
 
 
-	//form validations
+	//TODO: implement form validations
 	$('.postQ').submit(function( event ) {
-		if ( (/[^\s]/.test($( "input[type=text]" ).val()) )) {
+		console.log(event.target.child("input[type=text]").val())
+		if ( /^\s*$/.test(event.target.child("input[type=text]").val()) ) {
 			console.log('Empty input');
-			return;
+			event.preventDefault();
+			return false;
 		}
-		event.preventDefault();
 	});
 
 	$('.search').submit(function( event ) {
-		if ( (/[^\s]/.test($( "input[type=text]" ).val()) )) {
+		// console.log(event.target)
+		if ( /^\s*$/.test(event.target.child("input[type=text]").val()) ) {
 			console.log('Empty search');
+			event.preventDefault();
 			return;
 		}
-		event.preventDefault();
 	});
 
 });
