@@ -40,7 +40,7 @@ $(document).ready(function() {
 											${safeTxt}
 									</span>
 									<div>
-										<span><i class="fa fa-heart" aria-hidden="true" id=${data.id}></i>
+										<span><i class="fa fa-heart" aria-hidden="true" id=${data.id} liked="false"></i>
 										0 Likes</span>
 										<span class="timestamp">Just Now</span>
 									</div>
